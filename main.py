@@ -1,1 +1,1 @@
-my_var = "some value"
+my_var = ["some value"]
