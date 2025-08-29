@@ -1,0 +1,38 @@
+name: Debug GitHub Context
+on:
+  workflow_dispatch:
+    inputs:
+      debug_level:
+        description: 'Debug level'
+        required: false
+        default: 'basic'
+        type: choice
+        options:
+        - basic
+        - detailed
+        - full
+
+jobs:
+  debug_context:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print GitHub context
+        run: |
+          echo '${{ toJSON(github) }}'
+      
+      - name: Print additional context (if detailed or full)
+        if: ${{ inputs.debug_level == 'detailed' || inputs.debug_level == 'full' }}
+        run: |
+          echo ""
+          echo "=== Runner Context ==="
+          echo '${{ toJSON(runner) }}'
+          echo ""
+          echo "=== Job Context ==="
+          echo '${{ toJSON(job) }}'
+      
+      - name: Print environment variables (if full)
+        if: ${{ inputs.debug_level == 'full' }}
+        run: |
+          echo ""
+          echo "=== Environment Variables ==="
+          env | sort
